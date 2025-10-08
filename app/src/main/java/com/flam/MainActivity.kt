@@ -2,6 +2,7 @@ package com.flam
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var performanceOverlay: PerformanceOverlay
     private lateinit var processingToggle: Switch
     private lateinit var saveFrameButton: Button
+    private lateinit var exportFrameButton: Button
     private lateinit var lowThresholdSeekBar: SeekBar
     private lateinit var highThresholdSeekBar: SeekBar
     private lateinit var lowThresholdLabel: TextView
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cameraManager: CameraManager
     private lateinit var imageProcessor: ImageProcessor
     private lateinit var frameSaver: FrameSaver
+    private lateinit var frameExporter: FrameExporter
 
     // Performance monitoring
     private lateinit var performanceMonitor: PerformanceMonitor
@@ -82,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         performanceOverlay = findViewById(R.id.performanceOverlay)
         processingToggle = findViewById(R.id.processingToggle)
         saveFrameButton = findViewById(R.id.saveFrameButton)
+        exportFrameButton = findViewById(R.id.exportFrameButton)
         lowThresholdSeekBar = findViewById(R.id.lowThresholdSeekBar)
         highThresholdSeekBar = findViewById(R.id.highThresholdSeekBar)
         lowThresholdLabel = findViewById(R.id.lowThresholdLabel)
@@ -108,6 +112,9 @@ class MainActivity : AppCompatActivity() {
 
             // Initialize frame saver
             frameSaver = FrameSaver(this)
+
+            // Initialize frame exporter for web viewer
+            frameExporter = FrameExporter(this)
 
             updateStatus("Pipeline initialized", true)
             Log.i(TAG, "Processing pipeline initialized")

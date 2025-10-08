@@ -81,8 +81,21 @@
             android:text="💾 Save Frame to Downloads"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="8dp"
             android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF"
+            android:padding="12dp" />
+
+        <!-- Export frame for web viewer button -->
+        <Button
+            android:id="@+id/exportFrameButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🌐 Export Frame for Web Viewer"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#2196F3"
             android:textColor="#FFFFFF"
             android:padding="12dp" />
 
