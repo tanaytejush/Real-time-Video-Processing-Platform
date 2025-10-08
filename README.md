@@ -1,6 +1,4 @@
-# 🔥 Flam
-
-**Real-time Video Processing Platform - Android + Web**
+Real-time Video Processing Platform - Android + Web
 
 High-performance mobile computer vision application combining Camera2 API, OpenCV C++, OpenGL ES 2.0, and TypeScript for real-time edge detection and cross-platform frame visualization.
 
