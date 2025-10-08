@@ -1,14 +1,27 @@
 {
   "name": "flam-web",
   "version": "1.0.0",
-  "description": "TypeScript web components for Flam",
+  "description": "TypeScript web viewer for Flam processed frames",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "clean": "rm -rf dist"
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development --open",
+    "watch": "webpack --mode development --watch",
+    "clean": "rm -rf dist",
+    "serve": "http-server dist -p 8080"
   },
   "devDependencies": {
-    "typescript": "^5.3.3"
+    "@types/node": "^20.10.0",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.3",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
   }
 }

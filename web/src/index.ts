@@ -1,8 +1,13 @@
 /**
  * Flam Web TypeScript Module
- * Main entry point for web-based functionality
+ * Public API for web-based functionality
  */
 
+export { FrameViewer, FrameMetadata } from './FrameViewer';
+
+/**
+ * Main Flam Web API class
+ */
 export class FlamWeb {
     private initialized: boolean = false;
 
@@ -20,9 +25,19 @@ export class FlamWeb {
         console.log('FlamWeb ready');
     }
 
+    /**
+     * Process base64 image data
+     */
     public processData(data: any): any {
         // Processing logic
         return data;
+    }
+
+    /**
+     * Get API version
+     */
+    public getVersion(): string {
+        return '1.0.0';
     }
 }
 
