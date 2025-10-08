@@ -1,0 +1,14 @@
+{
+  "name": "flam-web",
+  "version": "1.0.0",
+  "description": "TypeScript web components for Flam",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
