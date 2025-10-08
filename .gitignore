@@ -58,3 +58,12 @@ web/build/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# OpenCV Android SDK (if placed in project directory)
+opencv-android-sdk/
+opencv*/
+sdk/native/
+*.aar
+
+# Claude Code AI assistant files
+.claude/
