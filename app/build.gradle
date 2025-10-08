@@ -5,41 +5,87 @@ plugins {
 
 android {
     namespace 'com.flam'
-    compileSdk 34
+    compileSdk rootProject.ext.compile_sdk_version
+
+    // NDK version
+    ndkVersion rootProject.ext.ndk_version
 
     defaultConfig {
         applicationId "com.flam"
-        minSdk 24
-        targetSdk 34
+        minSdk rootProject.ext.min_sdk_version
+        targetSdk rootProject.ext.target_sdk_version
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
+        // Test instrumentation runner
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Vector drawables support
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
+        // CMake configuration for OpenCV and native code
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++17 -frtti -fexceptions"
-                arguments "-DANDROID_STL=c++_shared"
+                // C++ compiler flags
+                cppFlags "-std=c++17", "-frtti", "-fexceptions", "-fvisibility=hidden"
+
+                // CMake arguments
+                arguments "-DANDROID_STL=c++_shared",
+                          "-DANDROID_PLATFORM=android-${rootProject.ext.min_sdk_version}",
+                          "-DANDROID_ARM_NEON=TRUE"
+
+                // Build targets
+                targets "flam"
             }
         }
 
+        // NDK ABI filters (architecture support)
         ndk {
             abiFilters 'arm64-v8a', 'armeabi-v7a'
         }
     }
 
     buildTypes {
-        release {
+        debug {
+            debuggable true
+            jniDebuggable true
             minifyEnabled false
+
+            // ProGuard files
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // Build config fields
+            buildConfigField "String", "BUILD_TYPE", '"debug"'
+        }
+
+        release {
+            debuggable false
+            jniDebuggable false
+            minifyEnabled true
+            shrinkResources true
+
+            // ProGuard files
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // Build config fields
+            buildConfigField "String", "BUILD_TYPE", '"release"'
+
+            // Signing config (add your signing config here)
+            // signingConfig signingConfigs.release
         }
     }
 
+    // CMake external build configuration
     externalNativeBuild {
         cmake {
             path file('../CMakeLists.txt')
-            version '3.22.1'
+            version rootProject.ext.cmake_version
         }
     }
 
+    // Java/Kotlin compilation options
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -47,16 +93,95 @@ android {
 
     kotlinOptions {
         jvmTarget = '17'
+
+        // Kotlin compiler arguments
+        freeCompilerArgs += [
+            '-opt-in=kotlin.RequiresOptIn'
+        ]
     }
 
+    // Build features
     buildFeatures {
         viewBinding true
+        buildConfig true
+    }
+
+    // Packaging options
+    packagingOptions {
+        // Exclude duplicate files
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+
+        // Exclude unnecessary files
+        resources {
+            excludes += ['/META-INF/{AL2.0,LGPL2.1}']
+        }
+    }
+
+    // Lint options
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
     }
 }
 
 dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.ext.kotlin_version}"
+
+    // AndroidX Core
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+
+    // Material Design
     implementation 'com.google.android.material:material:1.11.0'
+
+    // ConstraintLayout
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Lifecycle components
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+
+    // OpenCV Android SDK
+    // Option 1: Using local OpenCV SDK (recommended for NDK integration)
+    // Download OpenCV Android SDK from https://opencv.org/releases/
+    // Extract to project root and update path below
+    // implementation project(':opencv')
+
+    // Option 2: Using Maven dependency (limited features)
+    // implementation 'org.opencv:opencv-android:4.8.0'
+
+    // Option 3: Using local AAR file
+    // Place OpenCV AAR in libs/ directory
+    // implementation(name: 'opencv-release', ext: 'aar')
+
+    // Testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
+
+// Task to check OpenCV SDK environment variable
+task checkOpenCVSDK {
+    doLast {
+        def opencvSdk = System.getenv('OPENCV_ANDROID_SDK')
+        if (opencvSdk == null || opencvSdk.isEmpty()) {
+            logger.warn('WARNING: OPENCV_ANDROID_SDK environment variable not set!')
+            logger.warn('Please download OpenCV Android SDK from https://opencv.org/releases/')
+            logger.warn('Extract it and set OPENCV_ANDROID_SDK to the SDK path')
+            logger.warn('Example: export OPENCV_ANDROID_SDK=/path/to/opencv-android-sdk')
+        } else {
+            logger.lifecycle("OpenCV Android SDK path: ${opencvSdk}")
+        }
+    }
+}
+
+// Run OpenCV check before building
+preBuild.dependsOn checkOpenCVSDK

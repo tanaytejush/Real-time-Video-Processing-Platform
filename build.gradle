@@ -1,20 +1,43 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.9.20'
+    ext {
+        kotlin_version = '1.9.20'
+        gradle_version = '8.2.0'
+        compile_sdk_version = 34
+        min_sdk_version = 24
+        target_sdk_version = 34
+        ndk_version = '25.2.9519653'
+        cmake_version = '3.22.1'
+    }
+
     repositories {
         google()
         mavenCentral()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
+}
+
+plugins {
+    id 'com.android.application' version '8.2.0' apply false
+    id 'com.android.library' version '8.2.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.20' apply false
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
+
+        // Add local repository for OpenCV SDK if using local AAR
+        flatDir {
+            dirs "$rootDir/libs"
+        }
     }
 }
 
