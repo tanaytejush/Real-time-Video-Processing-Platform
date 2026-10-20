@@ -172,3 +172,8 @@ This is a learning project. Feel free to use it however you want.
 - OpenCV team for the awesome computer vision library
 - Android Camera2 API documentation and samples
 - Various StackOverflow answers for JNI memory management tips
+
+
+---
+
+<sub>Made by [tanaytejush](https://github.com/tanaytejush)</sub>
